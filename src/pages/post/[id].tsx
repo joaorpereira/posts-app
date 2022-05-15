@@ -14,6 +14,7 @@ import { ReactElement } from "react";
 import { dehydrate, QueryClient, useQuery } from "react-query";
 import { Author } from "templates/Author";
 import { Comments } from "templates/Comments";
+import { Layout } from "templates/Layout";
 import { fetchPostById } from "utils/http";
 
 export default function PostPage() {
@@ -70,7 +71,7 @@ export default function PostPage() {
 }
 
 PostPage.getLayout = function getLayout(page: ReactElement) {
-  return <main>{page}</main>;
+  return <Layout>{page}</Layout>;
 };
 
 export const getStaticProps: GetStaticProps = async (context) => {

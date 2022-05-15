@@ -12,6 +12,7 @@ import Head from "next/head";
 import Link from "next/link";
 import { ReactElement } from "react";
 import { dehydrate, QueryClient, useQuery } from "react-query";
+import { Layout } from "templates/Layout";
 import { fetchPosts } from "utils/http";
 
 export default function HomePage() {
@@ -53,7 +54,7 @@ export default function HomePage() {
 }
 
 HomePage.getLayout = function getLayout(page: ReactElement) {
-  return <main>{page}</main>;
+  return <Layout>{page}</Layout>;
 };
 
 export const getStaticProps: GetStaticProps = async () => {

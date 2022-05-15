@@ -7,15 +7,17 @@ import {
   Text
 } from "@chakra-ui/react";
 import { GetStaticPaths, GetStaticProps } from "next";
+import dynamic from "next/dynamic";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { ReactElement } from "react";
 import { dehydrate, QueryClient, useQuery } from "react-query";
-import { Author } from "templates/Author";
-import { Comments } from "templates/Comments";
-import { Layout } from "templates/Layout";
 import { fetchPostById } from "utils/http";
+
+const Comments = dynamic(() => import("../../templates/Comments/Comments"));
+const Author = dynamic(() => import("../../templates/Author/Author"));
+const Layout = dynamic(() => import("../../templates/Layout/Layout"));
 
 export default function PostPage() {
   <Head>

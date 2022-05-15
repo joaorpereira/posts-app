@@ -8,12 +8,14 @@ import {
   Text
 } from "@chakra-ui/react";
 import { GetStaticProps } from "next";
+import dynamic from "next/dynamic";
 import Head from "next/head";
 import Link from "next/link";
 import { ReactElement } from "react";
 import { dehydrate, QueryClient, useQuery } from "react-query";
-import { Layout } from "templates/Layout";
 import { fetchPosts } from "utils/http";
+
+const Layout = dynamic(() => import("../templates/Layout/Layout"));
 
 export default function HomePage() {
   <Head>

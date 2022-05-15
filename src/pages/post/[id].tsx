@@ -6,27 +6,16 @@ import {
   Stack,
   Text
 } from "@chakra-ui/react";
+import { GetStaticPaths, GetStaticProps } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { ReactElement } from "react";
-import { useQuery } from "react-query";
-import Author from "templates/Author";
+import { dehydrate, QueryClient, useQuery } from "react-query";
+import { Author } from "templates/Author";
+import { Comments } from "templates/Comments";
+import { fetchPostById } from "utils/http";
 
-const BASE_URL = "https://jsonplaceholder.typicode.com";
-
-type Post = {
-  id: string;
-  title: string;
-  body: string;
-  userId: string;
-};
-
-async function fetchPostById(id: string | string[] | undefined): Promise<Post> {
-  return typeof id === "undefined"
-    ? Promise.reject(new Error("Invalid id"))
-    : fetch(`${BASE_URL}/posts/${id}`).then((res) => res.json());
-}
 export default function PostPage() {
   <Head>
     <title>Won Games</title>
@@ -42,7 +31,7 @@ export default function PostPage() {
     ["post", id],
     () => fetchPostById(id),
     {
-      enabled: Boolean(id)
+      enabled: !!id
     }
   );
 
@@ -58,15 +47,15 @@ export default function PostPage() {
         </ChakraLink>
       </Link>
       <Stack spacing={4}>
-        <Author userId={post?.userId} />
+        <Author />
         <Heading as="h1" size="lg">
-          {post ? post.title : <p>loading...</p>}
+          {post ? `Title: ${post.title}` : <p>loading...</p>}
         </Heading>
         <Stack spacing={3}>
           {post ? (
             Array.from(Array(4), (_, index) => (
               <Text fontSize="lg" color="gray.600" key={index}>
-                {post.body}
+                {index + 1}. {post.body}
               </Text>
             ))
           ) : (
@@ -75,10 +64,32 @@ export default function PostPage() {
         </Stack>
       </Stack>
       <Divider />
+      <Comments />
     </Stack>
   );
 }
 
 PostPage.getLayout = function getLayout(page: ReactElement) {
   return <main>{page}</main>;
+};
+
+export const getStaticProps: GetStaticProps = async (context) => {
+  const id = context.params?.id as string;
+  const queryClient = new QueryClient();
+
+  await queryClient.prefetchQuery(["post", id], () => fetchPostById(id));
+
+  return {
+    props: {
+      id,
+      dehydratedState: dehydrate(queryClient)
+    }
+  };
+};
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  return {
+    paths: [],
+    fallback: "blocking"
+  };
 };

@@ -7,21 +7,12 @@ import {
   Stack,
   Text
 } from "@chakra-ui/react";
+import { GetStaticProps } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import { ReactElement } from "react";
-import { useQuery } from "react-query";
-const BASE_URL = "https://jsonplaceholder.typicode.com";
-
-type Post = {
-  id: string;
-  title: string;
-};
-
-async function fetchPosts(): Promise<Post[]> {
-  const res = await fetch(`${BASE_URL}/posts`);
-  return res.json();
-}
+import { dehydrate, QueryClient, useQuery } from "react-query";
+import { fetchPosts } from "utils/http";
 
 export default function HomePage() {
   <Head>
@@ -63,4 +54,16 @@ export default function HomePage() {
 
 HomePage.getLayout = function getLayout(page: ReactElement) {
   return <main>{page}</main>;
+};
+
+export const getStaticProps: GetStaticProps = async () => {
+  const queryClient = new QueryClient();
+
+  await queryClient.prefetchQuery("posts", fetchPosts);
+
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient)
+    }
+  };
 };

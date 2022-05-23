@@ -43,32 +43,41 @@ export default function PostPage() {
   }
 
   return (
-    <Stack spacing={6}>
-      <Link href="/" passHref>
-        <ChakraLink color="blue.600">
-          <Icon name="arrow-back" /> Back to posts
-        </ChakraLink>
-      </Link>
-      <Stack spacing={4}>
-        <Author />
-        <Heading as="h1" size="lg">
-          {post ? `Title: ${post.title}` : <p>loading...</p>}
-        </Heading>
-        <Stack spacing={3}>
-          {post ? (
-            Array.from(Array(4), (_, index) => (
-              <Text fontSize="lg" color="gray.600" key={index}>
-                {index + 1}. {post.body}
-              </Text>
-            ))
-          ) : (
-            <>loading...</>
-          )}
+    <>
+      <Head>
+        <title>News</title>
+        <link rel="shortcut icon" href="/img/icon-512.png" />
+        <link rel="apple-touch-icon" href="/img/icon-512.png" />
+        <meta name="description" content="The news channel in the world" />
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      </Head>
+      <Stack spacing={6}>
+        <Link href="/" passHref>
+          <ChakraLink color="blue.600">
+            <Icon name="arrow-back" /> Back to posts
+          </ChakraLink>
+        </Link>
+        <Stack spacing={4}>
+          <Author />
+          <Heading as="h1" size="lg">
+            {post ? `Title: ${post.title}` : <p>loading...</p>}
+          </Heading>
+          <Stack spacing={3}>
+            {post ? (
+              Array.from(Array(4), (_, index) => (
+                <Text fontSize="lg" color="gray.600" key={index}>
+                  {index + 1}. {post.body}
+                </Text>
+              ))
+            ) : (
+              <>loading...</>
+            )}
+          </Stack>
         </Stack>
+        <Divider />
+        <Comments />
       </Stack>
-      <Divider />
-      <Comments />
-    </Stack>
+    </>
   );
 }
 
